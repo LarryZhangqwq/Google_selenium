@@ -8,7 +8,11 @@ import time
 class Search():
     def __init__( self ):
         self.driver = None
+        self.chrome_options = webdriver.ChromeOptions()
+        self.chrome_options.add_argument('--ignore-certificate-errors')
         self.links = []
+        self.f = open( 'result.txt', 'w' )
+
 
     def find_links( self ):
         urls = self.driver.find_elements("xpath",'*//a')
@@ -35,6 +39,8 @@ class Search():
                 time.sleep(1)
                 # print(temp_url)
                 try:
+                    # self.driver.close()
+                    # self.driver = webdriver.Chrome(executable_path=r'C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe', options=self.chrome_options) 
                     self.driver.get(temp_url)
                     cnt_2 += 1
                     print(cnt_2)
@@ -45,6 +51,7 @@ class Search():
                 text = (str)(text)
                 if( text.find("外國") != -1 ):
                     print("!!!!!", url)
+                    self.f.write( url + '\n' )
         
         
         print( cnt_1, cnt_2 )
@@ -65,16 +72,21 @@ class Search():
            #  else:
          #        pass
 
-    def start( self, URL ):
+    def start( self, URL, kw ):
+        self.f.write( kw + '\n' )
         try:
             self.driver.quit()
         except:
             pass
 
-        self.driver = webdriver.Chrome(executable_path=r'C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe')
+        self.driver = webdriver.Chrome(executable_path=r'C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe', options=self.chrome_options)
         self.driver.get(URL)
 
-    
+
+    def end( self ):
+        self.f.write('\n')
+        self.driver.quit()
+        self.f.close()
 
 
 
@@ -91,8 +103,9 @@ def main():
         URL = f"https://www.google.com/search?q={kw}"
         try:
             search = Search() 
-            search.start(URL)
+            search.start( URL, kw )
             search.find_links()
+            search.end()
         except:
             pass
 
