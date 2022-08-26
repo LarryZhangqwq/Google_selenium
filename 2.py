@@ -11,7 +11,10 @@ class Search():
         self.chrome_options = webdriver.ChromeOptions()
         self.chrome_options.add_argument('--ignore-certificate-errors')
         self.links = []
-        self.f = open( 'result.txt', 'w' )
+        self.f = open( 'result.txt', 'a' )
+        self.k = open( 'keyword.txt', encoding = "utf-8" )
+        self.KEYWORD = self.k.read()
+        self.KEYWORD = list(self.KEYWORD.split('\n'))
 
 
     def find_links( self ):
@@ -49,28 +52,25 @@ class Search():
                     pass
                 text = self.driver.page_source
                 text = (str)(text)
-                if( text.find("外國") != -1 ):
-                    print("!!!!!", url)
-                    self.f.write( url + '\n' )
+                mark = 0
+                kw_list = []
+                for kw in self.KEYWORD:
+                    if(  text.find(kw) != -1 ):
+                        kw_list.append(kw)
+                    if( text.find(kw) != -1 and mark == 0 ):
+                        mark = 1
+                        title_name = self.driver.title
+                        # print(title_name, )
+                if( mark ):
+                    self.f.write( title_name + '     ' )
+                    for i in kw_list:
+                        self.f.write( i + " " )
+                    self.f.write( '\n' + url + '\n' )
+                    self.f.close()
+                    self.f = open( 'result.txt', 'a' )
         
         
         print( cnt_1, cnt_2 )
-                # print(22222)
-                # self.driver.get('www.baidu.com')
-                # print(1)
-                # newwindow = f'window.open("{temp_url}")'
-                # self.driver.execute_script(newwindow)
-                # self.driver.switch_to_window(self.driver.window_handles[1])
-                # self.driver.close() 
-                # pass
-     #            self.driver.get(url)
-       #          text = self.driver.page_source
-                # print(type(text))
-                # print(url)
-                #if( text.find("黑暴") ):
-                #    print(text.)
-           #  else:
-         #        pass
 
     def start( self, URL, kw ):
         self.f.write( kw + '\n' )
@@ -84,7 +84,7 @@ class Search():
 
 
     def end( self ):
-        self.f.write('\n')
+        self.f.write('\n' + '\n' )
         self.driver.quit()
         self.f.close()
 
