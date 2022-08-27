@@ -6,24 +6,24 @@ import time
 #     NAME = f.read().split('\n')
 
 class Search():
-    def __init__( self ):
+    def __init__( self ):  # 初始化
         self.driver = None
         self.chrome_options = webdriver.ChromeOptions()
-        self.chrome_options.add_argument('--ignore-certificate-errors')
-        self.links = []
-        self.f = open( 'result.txt', 'a' )
-        self.k = open( 'keyword.txt', encoding = "utf-8" )
-        self.KEYWORD = self.k.read()
-        self.KEYWORD = list(self.KEYWORD.split('\n'))
+        self.chrome_options.add_argument('--ignore-certificate-errors') # 忽略不安全网站提醒
+        self.links = [] # 存放所有link
+        self.f = open( 'result.txt', 'a' ) # 打开存放搜索结果的文件
+        self.k = open( 'keyword.txt', encoding = "utf-8" ) # 打开存放关键词的文件
+        self.KEYWORD = self.k.read() # 读取关键词
+        self.KEYWORD = list(self.KEYWORD.split('\n')) # 提取每一个关键词
 
 
     def find_links( self ):
-        urls = self.driver.find_elements("xpath",'*//a')
+        urls = self.driver.find_elements("xpath",'*//a') # 提取网页中的所有link
 
         for url in urls:
-            self.links.append(url.get_attribute("href"))
+            self.links.append(url.get_attribute("href")) # 转换网页中的所有link
 
-        self.check_content()
+        self.check_content() # 调用搜索关键词函数
 
     def check_content(self):
         cnt_1, cnt_2 = 0, 0
@@ -31,7 +31,7 @@ class Search():
         # print(self.links)
         for url in self.links:
             temp_url = str(url)
-            if( temp_url.find('google') == -1 and temp_url.find('support') == -1 and temp_url != 'None'):
+            if( temp_url.find('google') == -1 and temp_url.find('support') == -1 and temp_url != 'None' ):
                 cnt_1 += 1
         print(cnt_1)
         for url in self.links:
@@ -72,39 +72,39 @@ class Search():
         
         print( cnt_1, cnt_2 )
 
-    def start( self, URL, kw ):
-        self.f.write( kw + '\n' )
+    def start( self, URL, name ):
+        self.f.write( name + '\n' ) # 输出当前搜索的人名
         try:
             self.driver.quit()
         except:
             pass
 
         self.driver = webdriver.Chrome(executable_path=r'C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe', options=self.chrome_options)
-        self.driver.get(URL)
+        self.driver.get(URL) # 启动浏览器并跳转到“URL”页面
 
 
     def end( self ):
-        self.f.write('\n' + '\n' )
-        self.driver.quit()
-        self.f.close()
+        self.f.write('\n' + '\n' ) 
+        self.driver.quit() # 退出浏览器
+        self.f.close() # 关闭文档
 
 
 
 def main():
-    f = open( "name.txt", encoding = "utf-8" )
+    f = open( "name.txt", encoding = "utf-8" ) # 打开存放人名的文档
     NAME = f.read()
     NAME = NAME.split('\n')
-    print(NAME)
+    # print(NAME)
     
     for name in NAME:
         if( name == '' ):
             continue
         kw = name
-        URL = f"https://www.google.com/search?q={kw}"
+        URL = f"https://www.google.com/search?q={kw}" # 构建要搜索的网址
         try:
-            search = Search() 
-            search.start( URL, kw )
-            search.find_links()
+            search = Search()  # 定义变量，初始化
+            search.start( URL, kw ) # 打开URL这个网站
+            search.find_links() # 找所有link + 筛选
             search.end()
         except:
             pass
