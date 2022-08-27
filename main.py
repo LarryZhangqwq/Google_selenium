@@ -32,13 +32,13 @@ class Search():
         for url in self.links:
             temp_url = str(url)
             if( temp_url.find('google') == -1 and temp_url.find('support') == -1 and temp_url != 'None' ):
-                cnt_1 += 1
+                cnt_1 += 1 
         print(cnt_1)
         for url in self.links:
             # print(10086)
             # print(url)
             temp_url = str(url)
-            if( temp_url.find('google') == -1 and temp_url.find('support') == -1 and temp_url != 'None'):
+            if( temp_url.find('google') == -1 and temp_url.find('support') == -1 and temp_url != 'None'): # 剔除掉没用的link
                 time.sleep(1)
                 # print(temp_url)
                 try:
@@ -50,12 +50,12 @@ class Search():
                 except:
                     # print("Error    ", temp_url)
                     pass
-                text = self.driver.page_source
+                text = self.driver.page_source # 获取网页源码
                 text = (str)(text)
                 mark = 0
                 kw_list = []
                 for kw in self.KEYWORD:
-                    if(  text.find(kw) != -1 ):
+                    if(  text.find(kw) != -1 ): # 查找是否有关键词
                         kw_list.append(kw)
                     if( text.find(kw) != -1 and mark == 0 ):
                         mark = 1
