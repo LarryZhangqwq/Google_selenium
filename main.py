@@ -55,9 +55,9 @@ class Search():
                 mark = 0
                 kw_list = []
                 for kw in self.KEYWORD:
-                    if(  text.find(kw) != -1 ): # 查找是否有关键词
+                    if(  text.find(kw) != -1 and kw != '' ): # 查找是否有关键词
                         kw_list.append(kw)
-                    if( text.find(kw) != -1 and mark == 0 ):
+                    if( text.find(kw) != -1 and mark == 0  and kw != '' ):
                         mark = 1
                         title_name = self.driver.title
                         # print(title_name, )
@@ -112,4 +112,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
